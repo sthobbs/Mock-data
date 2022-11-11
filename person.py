@@ -77,12 +77,12 @@ class Person():
         """Make a record with customer info."""
 
         record = {
-            'customer_id': self.customer_id,
+            'customerId': self.customer_id,
             'age': self.age,
             'gender': self.gender,
-            'marital_status': self.marital_status,
-            'home_longitude': self.home_longitude,
-            'home_latitude': self.home_latitude,
+            'maritalStatus': self.marital_status,
+            'homeLongitude': self.home_longitude,
+            'homeLatitude': self.home_latitude,
         }
         return record
 
@@ -131,9 +131,9 @@ class Person():
         """
 
         event = {
-            'fraud_label': self.fraud_label,
-            'customer_id': self.customer_id,
-            'session_id': session_id,
+            'fraudLabel': self.fraud_label,
+            'customerId': self.customer_id,
+            'sessionId': session_id,
             'timestamp': str(event_time),
             'action': action,
         }
@@ -178,7 +178,7 @@ class Person():
         event['amount'] = amount
         # add account type
         account_type = choice(self.account_types, p=self.account_use_rates)
-        event['account_type'] = account_type
+        event['accountType'] = account_type
         # recipient
         if self.fraud_label == 1:
             recipient = choice(fraud_recipients)

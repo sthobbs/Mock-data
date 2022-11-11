@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import random
+import json
+import os
 from tqdm import tqdm
 from person import Customer, Fraudster
 from config import n_customers, n_fraudsters, n_sessions, \
@@ -40,7 +42,7 @@ def generate_sessions(customers, fraudsters):
 
 def flatten_sessions(sessions):
     """
-    Flatten a list of sessions into a dataframe.
+    Flatten a list of sessions into a dataframe of transactions.
 
     Parameters
     ----------
@@ -78,22 +80,38 @@ def run():
 
     # generate sessions
     sessions = generate_sessions(customers, fraudsters)
-    # flatten sessions into a dataframe
-    df = flatten_sessions(sessions)
-    # generate customer info table
-    cust_df = generate_customer_info_table(customers)
+    if 'csv' in save_formats or 'json' in save_formats:
+        # flatten sessions into a dataframe
+        df = flatten_sessions(sessions)
+        # generate customer info table
+        cust_df = generate_customer_info_table(customers)
 
     # save to disk
     path = Path(data_output_dir)
     path.mkdir(parents=True, exist_ok=True)
+    
+    # save to csv
     if 'csv' in save_formats:
-        # save to csv
-        df.to_csv(path / "flat_sessions.csv", index=False)
+        df.to_csv(path / "transactions.csv", index=False)
         cust_df.to_csv(path / "customer_info.csv", index=False)
-    if 'json' in save_formats:
-        # save to json
-        df.to_json(path / "flat_sessions.json", orient="records", lines=True)
+    
+    # save to json with all keys on all records
+    if 'json_full' in save_formats:
+        df.to_json(path / "transactions_fulls.json", orient="records", lines=True)
         cust_df.to_json(path / "customer_info.json", orient="records", lines=True)
+    
+    # save to json with only keys from each record
+    if 'json' in save_formats:
+        file_path = path / "transactions.json"
+        # remove file if it already exists
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        # save to json
+        with open(file_path, "a") as outfile:
+            for session in tqdm(sessions):
+                for transaction in session:
+                    json.dump(transaction, outfile)
+                    outfile.write('\n')
 
 
 if __name__ == "__main__":

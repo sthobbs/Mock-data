@@ -8,4 +8,4 @@ fraud_session_rate = 0.01  # approx proportion of sessions that are fraud
 start_date = '2022-01-01'  # start date of sessions
 end_date = '2023-01-01'  # end date of sessions
 data_output_dir = './data'  # path to directory where data will be saved
-save_formats = {'csv', 'json'}  # formats to save data in
+save_formats = ['csv', 'json', 'json_full']  # formats to save data in ('csv', 'json', 'json_full')
