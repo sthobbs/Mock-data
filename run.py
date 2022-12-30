@@ -42,7 +42,7 @@ def generate_sessions(customers, fraudsters):
 
 def flatten_sessions(sessions):
     """
-    Flatten a list of sessions into a dataframe of transactions.
+    Flatten a list of sessions into a dataframe of events.
 
     Parameters
     ----------
@@ -92,25 +92,25 @@ def run():
     
     # save to csv
     if 'csv' in save_formats:
-        df.to_csv(path / "transactions.csv", index=False)
+        df.to_csv(path / "events.csv", index=False)
         cust_df.to_csv(path / "customer_info.csv", index=False)
     
     # save to json with all keys on all records
     if 'json_full' in save_formats:
-        df.to_json(path / "transactions_fulls.json", orient="records", lines=True)
+        df.to_json(path / "events_fulls.json", orient="records", lines=True)
         cust_df.to_json(path / "customer_info.json", orient="records", lines=True)
     
     # save to json with only keys from each record
     if 'json' in save_formats:
-        file_path = path / "transactions.json"
+        file_path = path / "events.json"
         # remove file if it already exists
         if os.path.exists(file_path):
             os.remove(file_path)
         # save to json
         with open(file_path, "a") as outfile:
             for session in tqdm(sessions):
-                for transaction in session:
-                    json.dump(transaction, outfile)
+                for event in session:
+                    json.dump(event, outfile)
                     outfile.write('\n')
 
 
